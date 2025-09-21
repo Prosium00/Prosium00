@@ -1,0 +1,126 @@
+-- Services
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+
+local BuyStock = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Functions"):WaitForChild("BuyStock")
+local ProgressEventSubmit = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Functions"):WaitForChild("ProgressEventSubmit")
+local ToolState = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Events"):WaitForChild("ToolState")
+
+local player = Players.LocalPlayer
+
+-- Items to auto buy
+local items = {
+    "HeavyTurret",
+    "DragonFlamethrower",
+    "PlasmaTurret"
+}
+
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Main draggable frame (background)
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 220, 0, 200)
+mainFrame.Position = UDim2.new(0.5, -110, 0.65, 0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+mainFrame.Active = true
+mainFrame.Draggable = true
+mainFrame.Parent = screenGui
+
+-- Smooth corners
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 12)
+corner.Parent = mainFrame
+
+-- Title bar
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 30)
+title.BackgroundTransparency = 1
+title.Text = "⚙ Auto System"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Font = Enum.Font.SourceSansBold
+title.TextSize = 20
+title.Parent = mainFrame
+
+-- Helper: make button inside frame
+local function createButton(text, posY, color)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, -20, 0, 40)
+    btn.Position = UDim2.new(0, 10, 0, posY)
+    btn.BackgroundColor3 = color
+    btn.Text = text
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.SourceSansBold
+    btn.TextSize = 18
+    btn.Parent = mainFrame
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = btn
+
+    return btn
+end
+
+-- Create buttons
+local toggleBtn = createButton("Auto Buy: OFF", 40, Color3.fromRGB(50, 150, 50))
+local lunarBtn = createButton("Submit Lunar Points", 90, Color3.fromRGB(100, 100, 200))
+local attackBtn = createButton("Auto Attack: OFF", 140, Color3.fromRGB(150, 100, 50))
+
+-- Toggles
+local autoBuy = false
+local autoAttack = false
+
+-- Auto Buy Loop
+task.spawn(function()
+    while true do
+        task.wait(1)
+        if autoBuy then
+            for _, item in ipairs(items) do
+                local args = {"Blocks", item}
+                BuyStock:InvokeServer(unpack(args))
+            end
+        end
+    end
+end)
+
+-- Auto Attack Loop
+task.spawn(function()
+    while true do
+        task.wait(0.2) -- faster loop for attacking
+        if autoAttack then
+            local args = {true}
+            ToolState:FireServer(unpack(args))
+        end
+    end
+end)
+
+-- Toggle Auto Buy Button
+toggleBtn.MouseButton1Click:Connect(function()
+    autoBuy = not autoBuy
+    if autoBuy then
+        toggleBtn.Text = "Auto Buy: ON"
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
+    else
+        toggleBtn.Text = "Auto Buy: OFF"
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+    end
+end)
+
+-- Lunar Submit Button (one click)
+lunarBtn.MouseButton1Click:Connect(function()
+    local args = {"LunarEclipse"}
+    ProgressEventSubmit:InvokeServer(unpack(args))
+end)
+
+-- Toggle Auto Attack Button
+attackBtn.MouseButton1Click:Connect(function()
+    autoAttack = not autoAttack
+    if autoAttack then
+        attackBtn.Text = "Auto Attack: ON"
+        attackBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    else
+        attackBtn.Text = "Auto Attack: OFF"
+        attackBtn.BackgroundColor3 = Color3.fromRGB(150, 100, 50)
+    end
+end)
