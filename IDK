@@ -15,6 +15,11 @@ local items = {
     "PlasmaTurret"
 }
 
+-- Anti AFK
+for _, connection in pairs(getconnections(player.Idled)) do
+    connection:Disable()
+end
+
 -- Create ScreenGui
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
@@ -35,13 +40,33 @@ corner.Parent = mainFrame
 
 -- Title bar
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 30)
+title.Size = UDim2.new(1, -30, 0, 30) -- leave space for X button
 title.BackgroundTransparency = 1
 title.Text = "⚙ Auto System"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.Font = Enum.Font.SourceSansBold
 title.TextSize = 20
+title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = mainFrame
+
+-- ❌ Close button
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -30, 0, 0)
+closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+closeBtn.Text = "X"
+closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeBtn.Font = Enum.Font.SourceSansBold
+closeBtn.TextSize = 20
+closeBtn.Parent = mainFrame
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 8)
+closeCorner.Parent = closeBtn
+
+closeBtn.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
 
 -- Helper: make button inside frame
 local function createButton(text, posY, color)
