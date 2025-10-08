@@ -1,0 +1,275 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local Window = Rayfield:CreateWindow({
+   Name = "Your Goblin Mine",
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "Your Goblin Mine",
+   LoadingSubtitle = "By Prosium",
+   ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
+   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+   ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+})
+local Tab = Window:CreateTab("Farm", 4483362458)
+local STab = Window:CreateTab("Shop", 4483362458) -- Title, Image
+local Section = Tab:CreateSection("Farm")
+local Section = STab:CreateSection("Auto Buy Ore")
+
+
+
+
+
+--FUNCTIONS
+
+function Click()
+   while getgenv().Click do
+    fireclickdetector(workspace.Plots["2510644125"].Button.ClickDetector)
+task.wait(0.0001)
+end
+end
+
+function CUpg()
+   while getgenv().CUpg do
+    local args = {
+	"Clicker"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Remotes"):WaitForChild("BuyUpgrade"):FireServer(unpack(args))
+task.wait(0.0001)
+end
+end
+
+function gf()
+   while getgenv().gf do
+    local args = {"PlotUpgrades","GoblinMultiplier"}
+game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Remotes"):WaitForChild("BuyUpgrade"):FireServer(unpack(args))
+
+    task.wait(1)
+end
+end
+
+function gl()
+   while getgenv().gl do
+    local args = {
+	"PlotUpgrades",
+	"GoblinLimit"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Remotes"):WaitForChild("BuyUpgrade"):FireServer(unpack(args))
+
+    task.wait(1)
+end
+end
+
+function gs()
+   while getgenv().gs do
+    local args = {
+	"PlotUpgrades",
+	"GoblinSpeed"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Remotes"):WaitForChild("BuyUpgrade"):FireServer(unpack(args))
+
+    task.wait(1)
+end
+end
+
+
+
+
+
+
+
+local orelist = {
+    "Copper",
+    "Silver",
+    "Gold",
+    "Diamond",
+    "Electrum",
+    "Floatstone",
+    "Arcanite",
+    "Skystone",
+    "Suncrystal",
+    "Meteorite",
+    "Demonite",
+    "Ruby",
+    "Amethyst",
+    "Vicium",
+    "Bloodstone",
+    "Glorp",
+    "VoidStone"
+}
+
+local glist = {
+    "Miner Goblin",
+    "Engineer Goblin",
+    "Knight Goblin",
+    "Chef Goblin",
+    "Pirate Goblin",
+    "Astronaut Goblin",
+    "Yeehaw Goblin",
+    "Business Goblin",
+    "Wizard Goblin",
+    "Inferno Goblin"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local Toggle = Tab:CreateToggle({
+   Name = "Auto CLick",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(ClickV)
+    getgenv().Click = ClickV
+    Click()
+      end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Disgard Holding Item",
+   Callback = function()
+    fireproximityprompt(workspace.Plots["2510644125"].TrashCan:GetChildren()[2].Discard)
+   end,
+})
+
+
+
+
+
+
+local Section = Tab:CreateSection("Auto Upgrade")
+
+local Toggle = Tab:CreateToggle({
+   Name = "Click Multiplier",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(CUpgV)
+    getgenv().CUpg = CUpgV
+    CUpg()
+      end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "Goblin Fortune",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(gfv)
+    getgenv().gf = gfv
+    gf()
+      end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "Goblin Limit",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(glv)
+    getgenv().gl = glv
+    gl()
+      end,
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "Goblin Speed",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(gsV)
+    getgenv().gs = gsV
+    gs()
+      end,
+})
+
+
+local Dropdown = STab:CreateDropdown({
+   Name = "Select Ore",
+   Options = orelist,
+   CurrentOption = nil,
+   MultipleOptions = true,
+   Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Options)
+   Selected = Options
+   end,
+})
+
+local Toggle = STab:CreateToggle({
+   Name = "Auto Buy Ore",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(buy)
+   autobuy = buy
+   while autobuy do
+    if Selected then
+for _, ore in ipairs(Selected) do
+            local args = {
+	"Ores",
+	ore,
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Remotes"):WaitForChild("BuyShopItem"):InvokeServer(unpack(args))
+
+end
+task.wait(1)
+    end
+   end
+  end,
+})
+
+
+
+
+
+local Dropdown = STab:CreateDropdown({
+   Name = "Select Goblin",
+   Options = glist,
+   CurrentOption = nil,
+   MultipleOptions = true,
+   Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Options)
+   GSelected = Options
+   end,
+})
+
+local Toggle = STab:CreateToggle({
+   Name = "Auto Buy Goblin",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(G)
+   autobuy = G
+   while autobuy do
+    if GSelected then
+for _, g in ipairs(GSelected) do
+           local args = {
+	"Goblins",
+	g
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Remotes"):WaitForChild("BuyShopItem"):InvokeServer(unpack(args))
+end
+task.wait(1)
+    end
+   end
+  end,
+})
+
