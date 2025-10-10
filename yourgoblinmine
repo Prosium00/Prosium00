@@ -23,7 +23,10 @@ local Section = STab:CreateSection("Auto Buy Ore")
 
 function Click()
    while getgenv().Click do
-    fireclickdetector(workspace.Plots["2510644125"].Button.ClickDetector)
+    local Players = game:GetService("Players")
+local id = Players.LocalPlayer.UserId
+
+fireclickdetector(workspace.Plots[id].Button.ClickDetector)
 task.wait(0.0001)
 end
 end
@@ -272,4 +275,3 @@ task.wait(1)
    end
   end,
 })
-
